@@ -38,22 +38,22 @@ def processor_thread(q):
     buffer = []
     
     while True:
-        # Drain excess chunks to keep only the 2 most recent so the queue isn't stuck
+        #Drain excess chunks to keep only the 2 most recent so the queue isn't stuck
         while q.qsize() > 2:
-            q.get()  # discard unused chunk
+            q.get()  #Discard unused chunk
 
         for i in range(2):
             chunk = q.get()
             buffer.append(chunk)
         
-        #this is to combine chunks into one array
+        #This is to combine chunks into one array
         audio = np.concatenate(buffer).flatten()
         buffer = []
         
-        #processing
+        #Processing
         final_sig = process_buffer(audio, fs)
         
-        #playback
+        #Playback
         sd.play(final_sig.astype(np.float32), samplerate=fs)
         sd.wait()
 
